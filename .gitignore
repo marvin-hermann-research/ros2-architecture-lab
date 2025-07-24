@@ -1,0 +1,52 @@
+# ============================
+# Python
+# ============================
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+*.pyd
+*.pyo
+*.log
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# pip wheel cache
+*.whl
+
+# ============================
+# ROS2 / Colcon Workspace
+# ============================
+build/
+install/
+log/
+
+# ROS2 Launch log files
+*.launch.pyc
+*.launch.xmlc
+
+# ROS2 test results
+test_results/
+
+# ROS2 local configuration
+.colcon/
+
+# ============================
+# VSCode
+# ============================
+.vscode/
+.history/
+
+# ============================
+# System
+# ============================
+.DS_Store
+Thumbs.db

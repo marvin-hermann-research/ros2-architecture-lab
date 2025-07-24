@@ -1,12 +1,20 @@
 import py_trees
 
-class BehaviourCommandInterface():
+class BehaviourCommandInterface:
+    """
+    Command interface for manipulating BT condition nodes via CLI.
+
+    This class writes behavior triggers (e.g., 'must_walk') to the
+    blackboard. Intended for runtime testing or manual override.
+
+    TODO:
+        - Extend input parsing for multiple command types
+        - Support CLI arguments and runtime condition changes
+    """
     def __init__(self):
-        self._blackboard = py_trees.blackboard.Client(name = "BehaviourCommandInterfaceClient")
+        self._blackboard = py_trees.blackboard.Client(name="BehaviourCommandInterfaceClient")
         self._blackboard.register_key(
-            key = "must_walk",
-            access = py_trees.common.Access.WRITE
+            key="must_walk",
+            access=py_trees.common.Access.WRITE
         )
-        '''
-        todo logik einbauen welche mir per command eingabe in der konsole erlaubt gewissen verhaltens musster anzufordern wie "must walk" must walk backwards" must idle" must bla bla
-        '''
+        # Future: command interface to trigger specific BT states

@@ -2,6 +2,12 @@ from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 
 class LegLeft(Node):
+    """
+    Subscriber node representing the robot's left leg controller.
+
+    This node listens for actuation commands on the "left_leg_instruction"
+    topic and will later forward them to the hardware or simulation layer.
+    """
     def __init__(self):
         super().__init__("left_leg")
         self._subscriber = self.create_subscription(
@@ -12,5 +18,6 @@ class LegLeft(Node):
         )
         self.get_logger().info("Left leg subscriber initialized.")
 
-    def _listener_callback(self, instruction : Float32MultiArray):
+    def _listener_callback(self, instruction: Float32MultiArray):
+        # TODO: Implement execution logic for left leg instructions
         return
