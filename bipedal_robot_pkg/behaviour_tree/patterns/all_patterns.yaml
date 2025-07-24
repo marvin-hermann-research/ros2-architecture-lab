@@ -1,0 +1,11 @@
+# -----------------------------------------------------------------------------
+# Pattern Index File
+#
+# Maps behavior names to their corresponding motion pattern YAML files.
+# This abstraction layer allows flexible loading and extension of new patterns
+# without altering core logic.
+# -----------------------------------------------------------------------------
+
+patterns:
+  idle: "patterns/idle_pattern.yaml"
+  walk_forward: "patterns/walk_forward_pattern.yaml"
