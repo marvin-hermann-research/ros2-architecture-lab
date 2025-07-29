@@ -1,0 +1,45 @@
+# -----------------------------------------------------------------------------
+# Idle Motion Pattern
+# 
+# This pattern defines a minimal oscillation in the knee joints of a bipedal 
+# robot, simulating a subtle idle stance. It avoids deep squats or full extension,
+# instead relying on a gentle periodic variation for realism while standing.
+#
+# The sequence is loopable and intended to be executed repeatedly during idle state.
+# -----------------------------------------------------------------------------
+
+idle:
+  - time: 0.0
+    joints:
+      hip_left: 0          # No hip displacement
+      knee_left: 10        # Initial small bend
+      hip_right: 0
+      knee_right: 10
+
+  - time: 0.5
+    joints:
+      hip_left: 0
+      knee_left: 15        # Slight increase in knee flexion
+      hip_right: 0
+      knee_right: 15
+
+  - time: 1.0
+    joints:
+      hip_left: 0
+      knee_left: 10        # Return to initial state
+      hip_right: 0
+      knee_right: 10
+
+  - time: 1.5
+    joints:
+      hip_left: 0
+      knee_left: 5         # Slight under-compensation
+      hip_right: 0
+      knee_right: 5
+
+  - time: 2.0
+    joints:
+      hip_left: 0
+      knee_left: 10        # Back to baseline
+      hip_right: 0
+      knee_right: 10

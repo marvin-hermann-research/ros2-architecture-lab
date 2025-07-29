@@ -3,31 +3,39 @@ from py_trees.common import Status
 
 class WalkForwardBehaviour(py_trees.behaviour.Behaviour):
     """
-    A behavior node that initiates forward locomotion.
+    Behavior tree node to command forward walking locomotion.
 
-    Upon activation, this node is intended to publish a walking command 
-    to the movement controller (via ROS publisher, not yet integrated).
+    This node publishes a 'walk forward' command to the movement controller 
+    via a ROS publisher. It continuously sends the command once activated 
+    to ensure uninterrupted walking instructions.
 
     Status:
-        - RUNNING on initial activation
-        - SUCCESS afterward (placeholder logic)
-
-    TODOs:
-        - Integrate ROS publisher for walk command
-        - Add exit condition to determine walk termination or interruption
+        - RUNNING on first activation indicating the start of walking.
+        - SUCCESS after initial activation, denoting the walking state.
+    
+    Publishing Logic:
+        - Publishes once immediately after activation.
+        - Continues publishing every update to maintain the walking command.
+        - Avoids premature publishing before node activation.
     """
     def __init__(self, ros_publisher_node):
         super().__init__(name="Walk Forward Behaviour")
         self._active = False
-        # self._ros_publisher = ros_publisher_node  # [planned]
+        self._ros_publisher = ros_publisher_node
 
     def initialise(self):
+        # Reset active state when node is (re)initialized
         self._active = False
 
     def update(self):
+        # First publish upon activation to start walking
         if not self._active:
             self._active = True
+            self._ros_publisher.publish_message()
             return py_trees.common.Status.RUNNING
         
-        # Placeholder: implement condition-based transition and animation signaling
+        # Continue publishing to maintain walk command
+        self._ros_publisher.publish_message()
+
+        # Node does not self-terminate; control is managed by the BT parent nodes
         return py_trees.common.Status.SUCCESS
