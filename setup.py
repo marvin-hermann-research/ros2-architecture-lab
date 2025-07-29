@@ -23,6 +23,7 @@ setup(
             'imu_sensor = bipedal_robot_pkg.imu_sensor_node:main',
             'laser_sensor = bipedal_robot_pkg.laser_sensor_node:main',
             'battery_monitor = bipedal_robot_pkg.battery_monitor_node:main',
+            'movement_controller = bipedal_robot_pkg.movement_controller_node:main',
         ],
     },
 )
