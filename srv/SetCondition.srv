@@ -1,4 +1,0 @@
-string key # Name of condition
-bool value # Value of condition
----
-bool success # True if the condition was set successfully
