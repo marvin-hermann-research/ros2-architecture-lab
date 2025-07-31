@@ -2,7 +2,7 @@
 
 ## Project Description
 
-This repository implements a modular behavior tree architecture for controlling the reactive lower-body locomotion of a simulated humanoid robot in ROS2. The system combines sensory inputs with decision logic defined in a hierarchical behavior tree using the `py_trees` framework.
+This repository implements a modular behavior tree architecture for controlling the reactive lower-body locomotion of a simulated humanoid robot in ROS2. The system combines sensory inputs and external command inputs with decision logic defined in a hierarchical behavior tree using the `py_trees` framework.
 
 ## Research Context & Motivation
 
@@ -40,7 +40,7 @@ colcon build --packages-select bipedal_robot_pkg
 source install/setup.bash
 ```
 
-## Running the Siystem
+## Running the System
 
 ```bash
 # Launch simulation
