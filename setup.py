@@ -20,9 +20,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'imu_sensor = bipedal_robot_pkg.imu_sensor_node:main',
-            'laser_sensor = bipedal_robot_pkg.laser_sensor_node:main',
-            'battery_monitor = bipedal_robot_pkg.battery_monitor_node:main',
+            'imu_sensor = bipedal_robot_pkg.ros_nodes.sensors.imu_sensor_node:main',
+            'laser_sensor = bipedal_robot_pkg.ros_nodes.sensors.laser_sensor_node:main',
+            'battery_monitor = bipedal_robot_pkg.ros_nodes.sensors.battery_monitor_node:main',
         ],
-    },
+    }
+
 )
