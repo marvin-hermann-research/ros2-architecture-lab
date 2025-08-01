@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import BatteryState
 
-class BatteryMonitor(Node):
+class BatteryMonitorNode(Node):
     """
     Simulated battery publisher that broadcasts decreasing battery levels.
 
@@ -30,7 +30,7 @@ class BatteryMonitor(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = BatteryMonitor()
+    node = BatteryMonitorNode()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

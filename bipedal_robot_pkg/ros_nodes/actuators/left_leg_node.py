@@ -1,7 +1,7 @@
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 
-class LegLeft(Node):
+class LeftLegNode(Node):
     """
     Subscriber node representing the robot's left leg controller.
 

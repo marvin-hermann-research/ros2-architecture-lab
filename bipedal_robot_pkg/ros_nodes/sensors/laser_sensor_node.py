@@ -5,7 +5,7 @@ from std_msgs.msg import Header
 import random
 import math
 
-class LaserSensor(Node):
+class LaserSensorNode(Node):
     """
     Simulated LIDAR node emitting scan data over a ±70° field of view.
 
@@ -59,7 +59,7 @@ class LaserSensor(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = LaserSensor()
+    node = LaserSensorNode()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

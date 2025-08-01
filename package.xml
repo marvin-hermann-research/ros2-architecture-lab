@@ -9,7 +9,7 @@
 
   <depend>rclpy</depend>
   <depend>py_trees</depend>
-  <depend>py_trees_ros2</depend>
+  <depend>py_trees_ros</depend>
   <depend>pyyaml</depend>
 
   <test_depend>ament_copyright</test_depend>

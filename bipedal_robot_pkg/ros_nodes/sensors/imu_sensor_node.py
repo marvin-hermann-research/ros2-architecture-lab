@@ -6,7 +6,7 @@ from geometry_msgs.msg import Quaternion, Vector3
 import random
 import math
 
-class ImuSensor(Node):
+class ImuSensorNode(Node):
     """
     Simulated IMU sensor publishing orientation and acceleration data.
 
@@ -51,7 +51,7 @@ class ImuSensor(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = ImuSensor()
+    node = ImuSensorNode()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

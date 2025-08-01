@@ -11,7 +11,12 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
-    install_requires=['setuptools'],
+    install_requires=[
+    'setuptools',
+    'py_trees_ros',
+    'py_trees',
+    'pyyaml',
+    ],
     zip_safe=True,
     maintainer='marvin',
     maintainer_email='marvin@todo.todo',
