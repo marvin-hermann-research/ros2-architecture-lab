@@ -103,4 +103,8 @@ class BipedalRobotApplication:
         """
         for node in self._nodes.values():
             node.destroy_node()
-        rclpy.shutdown()
+        rclpy.shutdown()  
+
+if __name__ == "__main__":
+    app = BipedalRobotApplication()
+    app.run()
