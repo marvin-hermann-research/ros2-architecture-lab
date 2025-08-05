@@ -1,12 +1,12 @@
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 
-class RightLeg(Node):
+class RightLegNode(Node):
     """
-    Subscriber node for the robot's right leg controller.
+    Subscriber node representing the robot's right leg controller.
 
-    This node listens on "right_leg_instruction" and is expected to
-    execute or simulate physical motion accordingly.
+    This node listens for actuation commands on the "right_leg_instruction"
+    topic and will later forward them to the hardware or simulation layer.
     """
     def __init__(self):
         super().__init__("right_leg")

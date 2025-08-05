@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, String
 
-class MovementController(Node):
+class MovementControllerNode(Node):
     """
     Central controller responsible for executing locomotion instructions.
 
@@ -55,7 +55,7 @@ class MovementController(Node):
         
 def main(args=None):
     rclpy.init(args=args)
-    node = MovementController()
+    node = MovementControllerNode()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
