@@ -37,6 +37,8 @@ class MovementControllerNode(Node):
         self._pattern_step_index = 0                  # Current index in step sequence
         self._timer = self.create_timer(0.05, self._pattern_timer_callback)  # ~20 Hz control loop
 
+        self.get_logger().info("Movement Controller Node has been started.")
+
     def _init_publishers(self):
         """
         Create ROS publishers for the left and right leg actuator topics.
@@ -99,6 +101,7 @@ class MovementControllerNode(Node):
         
         with open(path, 'r') as f:
             self._current_pattern = yaml.safe_load(f)[pattern_name]
+            self.get_logger().info(f"Loaded pattern '{pattern_name}' from {path}")
         
         self._pattern_start_time = time.time()
         self._pattern_step_index = 0

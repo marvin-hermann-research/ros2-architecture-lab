@@ -28,6 +28,7 @@ setup(
             'imu_sensor = bipedal_robot_pkg.ros_nodes.sensors.imu_sensor_node:main',
             'laser_sensor = bipedal_robot_pkg.ros_nodes.sensors.laser_sensor_node:main',
             'battery_monitor = bipedal_robot_pkg.ros_nodes.sensors.battery_monitor_node:main',
+            'robot_application = bipedal_robot_pkg.behaviour_tree.launch.bipedal_robot_application:main',
         ],
     }
 

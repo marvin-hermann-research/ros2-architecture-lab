@@ -21,6 +21,8 @@ class LaserSensorNode(Node):
         self._init_scanner_parameters()
         self.timer = self.create_timer(0.00714, self._scan_step)  # 10 Hz
 
+        self.get_logger().info("Laser Sensor Node has been started.")
+
     def _init_scanner_parameters(self):
         self._angle_max = math.radians(70)
         self._angle_min = -self._angle_max

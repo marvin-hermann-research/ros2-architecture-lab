@@ -39,9 +39,9 @@ class TreeFactory:
         )
         
         # Condition Nodes
-        can_walk_condition = canWalk()
-        must_walk_condition = mustWalk()
-        
+        can_walk_condition = canWalk(self._ros_nodes["can_walk_evaluator"])
+        must_walk_condition = mustWalk(self._ros_nodes["must_walk_evaluator"])
+
         # Action Nodes
         walk_forward_action = WalkForwardBehaviour(self._ros_nodes["walk_forward_publisher"])
         idle_action = IdleBehaviour(self._ros_nodes["idle_publisher"])

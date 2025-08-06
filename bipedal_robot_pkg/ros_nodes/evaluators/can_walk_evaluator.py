@@ -21,6 +21,8 @@ class CanWalkEvaluator(Node):
         self._init_blackboard()
         self._init_flags()
 
+        self.get_logger().info("Can Walk Evaluator Node has been started.")
+
     def _init_flags(self):
         self._imu_grounded = False
         self._battery_ok = False

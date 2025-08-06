@@ -19,6 +19,8 @@ class MustWalkEvaluator(Node):
         self._init_subscribers()
         self._init_blackboard()
 
+        self.get_logger().info("Must Walk Evaluator Node has been started.")
+
     def _init_subscribers(self):
         self._must_walk_subscriber = self.create_subscription(
             Bool, "must_walk_command", self._must_walk_listener_callback, 10
@@ -32,5 +34,5 @@ class MustWalkEvaluator(Node):
         )
 
     def _must_walk_listener_callback(self, data: Bool):
-        #Write incoming Bool to blackboard as 'must_walk' flag.
+        # Write incoming Bool to blackboard as 'must_walk' flag.
         self._blackboard.must_walk = data.data
