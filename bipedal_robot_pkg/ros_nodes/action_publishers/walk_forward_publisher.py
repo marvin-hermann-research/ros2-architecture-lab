@@ -1,5 +1,5 @@
 import rclpy
-from rclpy import Node
+from rclpy.node import Node
 from std_msgs.msg import String
 
 class WalkForwardPublisher(Node):

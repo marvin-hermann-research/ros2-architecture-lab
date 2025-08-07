@@ -34,6 +34,7 @@ class CanWalkEvaluator(Node):
             key="can_walk",
             access=py_trees.common.Access.WRITE
         )
+        self._blackboard.can_walk = False
 
     def _init_subscribers(self):
         self._imu_sensor_subscriber = self.create_subscription(

@@ -6,10 +6,24 @@ setup(
     name=package_name,
     version='0.0.0',
     packages=find_packages(exclude=['test']),
+    # add package data for behaviour tree patterns
+    package_data={
+        package_name: [
+            'behaviour_tree/patterns/*.yaml',
+        ]
+    },
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        # copy all YAML files into the share directory
+        ('share/' + package_name + '/behaviour_tree/patterns',
+            [
+                'bipedal_robot_pkg/behaviour_tree/patterns/all_patterns.yaml',
+                'bipedal_robot_pkg/behaviour_tree/patterns/idle_pattern.yaml',
+                'bipedal_robot_pkg/behaviour_tree/patterns/walk_forward_pattern.yaml',
+            ]
+        )
     ],
     install_requires=[
     'setuptools',

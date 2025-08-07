@@ -45,8 +45,8 @@ class BipedalRobotApplication(Node):
     """
     def __init__(self):
         # === 1. Initialize the ROS 2 runtime ===
-        super().__init__("bipedal_robot_application")
         rclpy.init()
+        super().__init__("bipedal_robot_application")
 
         # === 2. Instantiate all ROS 2 nodes ===
         # Each node handles a specific subsystem such as actuation, sensing, or control

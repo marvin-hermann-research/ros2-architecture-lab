@@ -32,6 +32,7 @@ class MustWalkEvaluator(Node):
             key="must_walk",
             access=py_trees.common.Access.WRITE
         )
+        self._blackboard.must_walk = False
 
     def _must_walk_listener_callback(self, data: Bool):
         # Write incoming Bool to blackboard as 'must_walk' flag.

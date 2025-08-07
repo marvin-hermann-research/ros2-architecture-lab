@@ -3,6 +3,8 @@ import time
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, String
+from ament_index_python.packages import get_package_share_directory
+import os 
 
 class MovementControllerNode(Node):
     """
@@ -28,8 +30,12 @@ class MovementControllerNode(Node):
         self._init_publishers()
         self._init_subscribers()
         
+        # Load the patterns index from the package share directory
+        pkg_share = get_package_share_directory("bipedal_robot_pkg")
+        self._patterns_path = os.path.join(pkg_share, "behaviour_tree/patterns/all_patterns.yaml")
+
         # Load the pattern index which maps names to individual YAML files
-        with open('patterns.yaml', 'r') as file:
+        with open(self._patterns_path, 'r') as file:
             self._patterns = yaml.safe_load(file)
 
         self._current_pattern = None                  # Currently active motion sequence
