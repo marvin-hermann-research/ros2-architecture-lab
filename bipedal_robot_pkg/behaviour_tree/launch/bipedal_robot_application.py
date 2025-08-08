@@ -80,12 +80,18 @@ class BipedalRobotApplication(Node):
 
         self.get_logger().info("Behavior tree has been constructed and initialized.")
 
-        # === 5. Register all other ROS 2 nodes with a MultiThreadedExecutor ===
+        # === 5. Register all ROS 2 nodes with a MultiThreadedExecutor ===
         # Allows parallel execution of callbacks from all registered nodes
+        # Also ensures the behavior tree's node is included in the executor
         self._executor = MultiThreadedExecutor()
         for node in self._nodes.values():
             self._executor.add_node(node)
         
+        if self._tree.node is None:
+            self.get_logger().error("BehaviourTree node is None after setup!")
+        else:
+            self._executor.add_node(self._tree.node)
+
         self.get_logger().info("Multi-threaded executor has been set up with all nodes.")
 
     def run(self):
