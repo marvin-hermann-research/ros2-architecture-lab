@@ -27,7 +27,7 @@ class LaserSensorNode(Node):
         self._angle_max = math.radians(70)
         self._angle_min = -self._angle_max
         self._angle_increment = math.radians(10)
-        self._range_min = 0.2
+        self._range_min = 0.5
         self._range_max = 2.0
         self._scan_data = []
         self._current_angle_index = 0

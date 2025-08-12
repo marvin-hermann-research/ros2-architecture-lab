@@ -19,7 +19,7 @@ class canWalk(py_trees.behaviour.Behaviour):
             access=py_trees.common.Access.READ
         )
         
-        self._ros2_logger = ros2_logger
+        self._ros2_logger = ros2_logger.get_logger()
 
     
     def update(self):

@@ -6,6 +6,5 @@
 # without altering core logic.
 # -----------------------------------------------------------------------------
 
-patterns:
-  idle: "patterns/idle_pattern.yaml"
-  walk_forward: "patterns/walk_forward_pattern.yaml"
+idle: "idle_pattern.yaml"
+walk_forward: "walk_forward_pattern.yaml"

@@ -36,7 +36,14 @@ class MovementControllerNode(Node):
 
         # Load the pattern index which maps names to individual YAML files
         with open(self._patterns_path, 'r') as file:
-            self._patterns = yaml.safe_load(file)
+            loaded_patterns = yaml.safe_load(file)
+
+        # Convert relative paths to absolute paths
+        base_dir = os.path.dirname(self._patterns_path)
+        self._patterns = {}
+        for name, rel_path in loaded_patterns.items():
+            abs_path = os.path.join(base_dir, rel_path)
+            self._patterns[name] = abs_path
 
         self._current_pattern = None                  # Currently active motion sequence
         self._pattern_start_time = None               # Reference time for pattern playback
@@ -107,7 +114,7 @@ class MovementControllerNode(Node):
         
         with open(path, 'r') as f:
             self._current_pattern = yaml.safe_load(f)[pattern_name]
-            self.get_logger().info(f"Loaded pattern '{pattern_name}' from {path}")
+            self.get_logger().info(f"Loaded pattern {pattern_name}")
         
         self._pattern_start_time = time.time()
         self._pattern_step_index = 0

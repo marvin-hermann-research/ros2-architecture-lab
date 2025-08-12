@@ -1,4 +1,5 @@
 import rclpy
+from py_trees.blackboard import Blackboard
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from py_trees_ros.trees import BehaviourTree

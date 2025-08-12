@@ -32,8 +32,6 @@ class WalkForwardBehaviour(py_trees.behaviour.Behaviour):
         # First publish upon activation to start walking
         if not self._active:
             self._active = True
-            self._ros_publisher.publish_message()
-            return py_trees.common.Status.RUNNING
         
         # Continue publishing to maintain walk command
         self._ros_publisher.publish_message()
@@ -41,4 +39,4 @@ class WalkForwardBehaviour(py_trees.behaviour.Behaviour):
         self._ros_publisher.get_logger().info("Walk Forward Behaviour is active, publishing walk command.")
 
         # Node does not self-terminate; control is managed by the BT parent nodes
-        return py_trees.common.Status.SUCCESS
+        return py_trees.common.Status.RUNNING
