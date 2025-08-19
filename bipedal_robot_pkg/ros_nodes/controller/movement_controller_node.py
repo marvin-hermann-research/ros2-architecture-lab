@@ -52,7 +52,7 @@ class MovementControllerNode(Node):
         self._timer = self.create_timer(0.05, self._pattern_timer_callback)  # ~20 Hz control loop
 
         self.get_logger().info("Movement Controller Node has been started.")
-        self._logger = LoggingFactory("movement_controller")
+        self._json_logger = LoggingFactory("movement_controller_logger")
 
     def _init_publishers(self):
         """
@@ -112,14 +112,14 @@ class MovementControllerNode(Node):
         path = self._patterns.get(pattern_name)
         if path is None:
             self.get_logger().error(f"Pattern '{pattern_name}' not found in index.")
-            self._logger.log("ERROR", "Pattern Not Found", {"pattern": pattern_name})
+            self._json_logger.log("ERROR", "Pattern Not Found", {"pattern": pattern_name})
             return
         
         with open(path, 'r') as f:
             self._current_pattern = yaml.safe_load(f)[pattern_name]
             self.get_logger().info(f"Loaded pattern {pattern_name}")
-            self._logger.log("INFO", "Pattern Loaded", {"pattern": pattern_name})
-        
+            self._json_logger.log("INFO", "Pattern Loaded", {"pattern": pattern_name})
+
         self._pattern_start_time = time.time()
         self._pattern_step_index = 0
 
@@ -146,7 +146,7 @@ class MovementControllerNode(Node):
         if self._pattern_step_index >= len(self._current_pattern):
             self._current_pattern = None
             self.get_logger().info("Pattern execution completed.")
-            self._logger.log("INFO", "Pattern Execution Completed", {})
+            self._json_logger.log("INFO", "Pattern Execution Completed", {})
 
     def _execute_joints(self, joints):
         """
