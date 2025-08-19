@@ -1,5 +1,3 @@
-import yaml
-import time
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, String
@@ -11,20 +9,13 @@ class MovementControllerNode(Node):
     """
     Central controller responsible for executing locomotion instructions.
 
-    This ROS2 node translates high-level behavior tree (BT) actions—such as
-    'idle' or 'walk_forward'—into low-level joint actuation commands via
-    pre-defined motion patterns stored in YAML files.
+    This node subscribes to high-level commands such as "idle_status"
+    and "walk_forward", and is responsible for translating them into
+    low-level actuator instructions for both legs.
 
-    Key Responsibilities:
-        - Subscribes to BT-issued command topics
-        - Loads YAML-based trajectory patterns
-        - Publishes joint commands to leg actuators
-        - Executes motion sequences using timer-driven scheduling
-
-    Future Extensions:
-        - Trajectory interpolation
-        - Parametrized gait generation
-        - Dynamic pattern composition
+    Future Features:
+        - Load movement sequences from YAML files
+        - Parse and execute kinematic or trajectory scripts
     """
     def __init__(self):
         super().__init__("movement_controller")
@@ -55,10 +46,6 @@ class MovementControllerNode(Node):
         self._json_logger = LoggingFactory("movement_controller_logger")
 
     def _init_publishers(self):
-        """
-        Create ROS publishers for the left and right leg actuator topics.
-        Each publishes a `Float32MultiArray` message representing joint angles.
-        """
         self._left_leg_publisher = self.create_publisher(
             Float32MultiArray,
             "left_leg_instruction",
@@ -71,10 +58,6 @@ class MovementControllerNode(Node):
         )
     
     def _init_subscribers(self):
-        """
-        Register subscriptions to high-level behavior topics emitted by the BT.
-        Triggers execution of corresponding motor patterns.
-        """
         self._idle_publisher = self.create_subscription(
             String,
             "idle_status",
@@ -89,11 +72,8 @@ class MovementControllerNode(Node):
         )
 
     def _idle_callback(self, instruction):
-        """
-        Callback triggered when the IdleBehaviour node becomes active.
-        Loads and begins execution of the 'idle' motion pattern.
-        """
-        self._load_and_start_pattern("idle")
+        # TODO: Implement behavior-specific idle instructions
+        pass
 
     def _walk_forward_callback(self, instruction):
         """
