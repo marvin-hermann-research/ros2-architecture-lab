@@ -5,10 +5,9 @@ from sensor_msgs.msg import Imu, LaserScan, BatteryState
 
 class StatusLogger(Node):
     """
-    Passive node to log and monitor internal robot state.
+    Passive node to log and monitor internal robot state to console.
 
-    Subscribes to all relevant sensor and instruction channels and is intended
-    to later write periodic summaries into a persistent JSON logfile.
+    Subscribes to all relevant sensor and instruction channels.
 
     Future:
         - Add JSON export per timestamp

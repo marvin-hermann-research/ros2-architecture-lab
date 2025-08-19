@@ -21,6 +21,8 @@ class CanWalkEvaluator(Node):
         self._init_blackboard()
         self._init_flags()
 
+        self.get_logger().info("Can Walk Evaluator Node has been started.")
+
     def _init_flags(self):
         self._imu_grounded = False
         self._battery_ok = False
@@ -32,6 +34,7 @@ class CanWalkEvaluator(Node):
             key="can_walk",
             access=py_trees.common.Access.WRITE
         )
+        self._blackboard.can_walk = False
 
     def _init_subscribers(self):
         self._imu_sensor_subscriber = self.create_subscription(

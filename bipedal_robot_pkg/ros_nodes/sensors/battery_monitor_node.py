@@ -19,6 +19,8 @@ class BatteryMonitorNode(Node):
         self._battery_voltage = self._battery_max_voltage
         self._timer = self.create_timer(1.0, self._publish_battery_state)
 
+        self.get_logger().info("Battery Monitor Node has been started.")
+
     def _publish_battery_state(self):
         msg = BatteryState()
         msg.voltage = self._battery_voltage

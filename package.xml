@@ -11,6 +11,8 @@
   <depend>py_trees</depend>
   <depend>py_trees_ros</depend>
   <depend>pyyaml</depend>
+  <depend>python3-logging</depend>
+  <depend>python3-json-logger</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

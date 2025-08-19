@@ -1,5 +1,6 @@
 import py_trees
 from py_trees.composites import Selector
+from py_trees.composites import Sequence
 from bipedal_robot_pkg.behaviour_tree.nodes.conditions.can_walk import canWalk
 from bipedal_robot_pkg.behaviour_tree.nodes.conditions.must_walk import mustWalk
 from bipedal_robot_pkg.behaviour_tree.nodes.actions.walk_forward_behaviour import WalkForwardBehaviour
@@ -35,23 +36,24 @@ class TreeFactory:
         """
         root = Selector(
             name="Locomotion Root",
-            memory=True
+            memory=False
         )
-        
+
         # Condition Nodes
-        can_walk_condition = canWalk()
-        must_walk_condition = mustWalk()
-        
+        can_walk_condition = canWalk(self._ros_nodes["can_walk_evaluator"])
+        must_walk_condition = mustWalk(self._ros_nodes["must_walk_evaluator"])
+
         # Action Nodes
         walk_forward_action = WalkForwardBehaviour(self._ros_nodes["walk_forward_publisher"])
         idle_action = IdleBehaviour(self._ros_nodes["idle_publisher"])
 
         # Add children in order of priority
         root.add_children([
-            idle_action,
-            can_walk_condition,
-            must_walk_condition,
-            walk_forward_action
+            Sequence(
+                name = "Walk Forward Sequence",
+                memory=False,
+                children = [can_walk_condition, must_walk_condition, walk_forward_action]),
+            idle_action
         ])
 
         return root

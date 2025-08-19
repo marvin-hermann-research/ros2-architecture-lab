@@ -20,7 +20,8 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, ros_publisher_node):
         super().__init__(name="Idle Behaviour")
         self._active = False
-        # self._ros_publisher = ros_publisher_node  # [planned]
+        self._ros_publisher = ros_publisher_node
+        self._ros_publisher.get_logger().info("Idle Behaviour initialized.")
 
     def initialise(self):
         self._active = False
@@ -28,7 +29,11 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
     def update(self):
         if not self._active:
             self._active = True
-            return py_trees.common.Status.RUNNING
-        
-        # Placeholder: logic to determine exit condition and signal animation controller
-        return py_trees.common.Status.SUCCESS
+
+        # Continue publishing on every update to maintain idle command
+        self._ros_publisher.publish_message()
+
+        self._ros_publisher.get_logger().info("Idle Behaviour is active, publishing idle command.")
+
+        # This node does not self-terminate; it relies on BT parent control flow.
+        return py_trees.common.Status.RUNNING

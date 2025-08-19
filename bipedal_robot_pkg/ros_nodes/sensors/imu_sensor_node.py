@@ -18,6 +18,8 @@ class ImuSensorNode(Node):
         self._publisher = self.create_publisher(Imu, "imu_sensor_data", 10)
         self.timer = self.create_timer(0.05, self._publish_imu_data)  # 20 Hz
 
+        self.get_logger().info("IMU Sensor Node has been started.")
+
     def _publish_imu_data(self):
         _imu_msg = Imu()
         _imu_msg.header = Header()

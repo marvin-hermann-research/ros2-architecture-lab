@@ -19,7 +19,8 @@ class WalkForwardBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, ros_publisher_node):
         super().__init__(name="Walk Forward Behaviour")
         self._active = False
-        # self._ros_publisher = ros_publisher_node  # [planned]
+        self._ros_publisher = ros_publisher_node
+        self._ros_publisher.get_logger().info("Walk Forward Behaviour initialized.")
 
     def initialise(self):
         self._active = False
@@ -27,7 +28,11 @@ class WalkForwardBehaviour(py_trees.behaviour.Behaviour):
     def update(self):
         if not self._active:
             self._active = True
-            return py_trees.common.Status.RUNNING
-        
-        # Placeholder: implement condition-based transition and animation signaling
-        return py_trees.common.Status.SUCCESS
+            
+        # Continue publishing to maintain walk command
+        self._ros_publisher.publish_message()
+
+        self._ros_publisher.get_logger().info("Walk Forward Behaviour is active, publishing walk command.")
+
+        # Node does not self-terminate; control is managed by the BT parent nodes
+        return py_trees.common.Status.RUNNING
