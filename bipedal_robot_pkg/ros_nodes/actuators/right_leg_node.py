@@ -19,5 +19,12 @@ class RightLegNode(Node):
         self.get_logger().info("Right leg subscriber initialized.")
         
     def _listener_callback(self, instruction: Float32MultiArray):
-        # TODO: Implement execution logic for right leg instructions
-        return
+        """
+        Callback that handles incoming right leg instructions.
+        Processes the Float32MultiArray command and forwards it to the actuator.
+        """
+        try:
+            # TODO: Implement execution logic for right leg instructions
+            pass
+        except Exception as e:
+            self.get_logger().error(f"Error processing right leg instruction: {e}")

@@ -34,26 +34,31 @@ class TreeFactory:
         Returns:
             py_trees.composites.Selector: The root of the behavior tree.
         """
-        root = Selector(
-            name="Locomotion Root",
-            memory=False
-        )
+        try:
+            root = Selector(
+                name="Locomotion Root",
+                memory=False
+            )
 
-        # Condition Nodes
-        can_walk_condition = canWalk(self._ros_nodes["can_walk_evaluator"])
-        must_walk_condition = mustWalk(self._ros_nodes["must_walk_evaluator"])
+            # Condition Nodes
+            can_walk_condition = canWalk(self._ros_nodes["can_walk_evaluator"])
+            must_walk_condition = mustWalk(self._ros_nodes["must_walk_evaluator"])
 
-        # Action Nodes
-        walk_forward_action = WalkForwardBehaviour(self._ros_nodes["walk_forward_publisher"])
-        idle_action = IdleBehaviour(self._ros_nodes["idle_publisher"])
+            # Action Nodes
+            walk_forward_action = WalkForwardBehaviour(self._ros_nodes["walk_forward_publisher"])
+            idle_action = IdleBehaviour(self._ros_nodes["idle_publisher"])
 
-        # Add children in order of priority
-        root.add_children([
-            Sequence(
-                name = "Walk Forward Sequence",
-                memory=False,
-                children = [can_walk_condition, must_walk_condition, walk_forward_action]),
-            idle_action
-        ])
+            # Add children in order of priority
+            root.add_children([
+                Sequence(
+                    name = "Walk Forward Sequence",
+                    memory=False,
+                    children = [can_walk_condition, must_walk_condition, walk_forward_action]),
+                idle_action
+            ])
 
-        return root
+            return root
+        except KeyError as e:
+            print(f"[TreeFactory] Missing ROS node for tree construction: {e}")
+        except Exception as e:
+            print(f"[TreeFactory] Error creating locomotion tree: {e}")

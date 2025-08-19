@@ -28,31 +28,34 @@ class MovementControllerNode(Node):
     """
     def __init__(self):
         super().__init__("movement_controller")
-        self._init_publishers()
-        self._init_subscribers()
-        
-        # Load the patterns index from the package share directory
-        pkg_share = get_package_share_directory("bipedal_robot_pkg")
-        self._patterns_path = os.path.join(pkg_share, "behaviour_tree/patterns/all_patterns.yaml")
+        try:
+            self._init_publishers()
+            self._init_subscribers()
+            
+            # Load the patterns index from the package share directory
+            pkg_share = get_package_share_directory("bipedal_robot_pkg")
+            self._patterns_path = os.path.join(pkg_share, "behaviour_tree/patterns/all_patterns.yaml")
 
-        # Load the pattern index which maps names to individual YAML files
-        with open(self._patterns_path, 'r') as file:
-            loaded_patterns = yaml.safe_load(file)
+            # Load the pattern index which maps names to individual YAML files
+            with open(self._patterns_path, 'r') as file:
+                loaded_patterns = yaml.safe_load(file)
 
-        # Convert relative paths to absolute paths
-        base_dir = os.path.dirname(self._patterns_path)
-        self._patterns = {}
-        for name, rel_path in loaded_patterns.items():
-            abs_path = os.path.join(base_dir, rel_path)
-            self._patterns[name] = abs_path
+            # Convert relative paths to absolute paths
+            base_dir = os.path.dirname(self._patterns_path)
+            self._patterns = {}
+            for name, rel_path in loaded_patterns.items():
+                abs_path = os.path.join(base_dir, rel_path)
+                self._patterns[name] = abs_path
 
-        self._current_pattern = None                  # Currently active motion sequence
-        self._pattern_start_time = None               # Reference time for pattern playback
-        self._pattern_step_index = 0                  # Current index in step sequence
-        self._timer = self.create_timer(0.05, self._pattern_timer_callback)  # ~20 Hz control loop
+            self._current_pattern = None                  # Currently active motion sequence
+            self._pattern_start_time = None               # Reference time for pattern playback
+            self._pattern_step_index = 0                  # Current index in step sequence
+            self._timer = self.create_timer(0.05, self._pattern_timer_callback)  # ~20 Hz control loop
 
-        self.get_logger().info("Movement Controller Node has been started.")
-        self._json_logger = LoggingFactory("movement_controller_logger")
+            self.get_logger().info("Movement Controller Node has been started.")
+            self._json_logger = LoggingFactory("movement_controller_logger")
+        except Exception as e:
+            self.get_logger().error(f"Failed to initialize MovementControllerNode: {e}")
 
     def _init_publishers(self):
         """
@@ -109,19 +112,26 @@ class MovementControllerNode(Node):
         Args:
             pattern_name (str): Name of the pattern to load, as defined in patterns.yaml
         """
-        path = self._patterns.get(pattern_name)
-        if path is None:
-            self.get_logger().error(f"Pattern '{pattern_name}' not found in index.")
-            self._json_logger.log("ERROR", "Pattern Not Found", {"pattern": pattern_name})
-            return
-        
-        with open(path, 'r') as f:
-            self._current_pattern = yaml.safe_load(f)[pattern_name]
+        try:
+            path = self._patterns.get(pattern_name)
+            if path is None:
+                self.get_logger().error(f"Pattern '{pattern_name}' not found in index.")
+                self._json_logger.log("ERROR", "Pattern Not Found", {"pattern": pattern_name})
+                return
+            
+            with open(path, 'r') as f:
+                loaded_pattern = yaml.safe_load(f)
+                if pattern_name not in loaded_pattern:
+                    raise ValueError(f"No steps found for pattern '{pattern_name}'")
+                self._current_pattern = loaded_pattern[pattern_name]
+
+            self._pattern_start_time = time.time()
+            self._pattern_step_index = 0
             self.get_logger().info(f"Loaded pattern {pattern_name}")
             self._json_logger.log("INFO", "Pattern Loaded", {"pattern": pattern_name})
-
-        self._pattern_start_time = time.time()
-        self._pattern_step_index = 0
+        except Exception as e:
+            self.get_logger().error(f"Failed to load/start pattern '{pattern_name}': {e}")
+            self._json_logger.log("ERROR", "Pattern Load Failed", {"pattern": pattern_name, "error": str(e)})
 
     def _pattern_timer_callback(self):
         """
@@ -131,22 +141,25 @@ class MovementControllerNode(Node):
         is reached or surpassed. When all steps have been processed, the current
         pattern is cleared.
         """
-        if self._current_pattern is None or self._pattern_start_time is None:
-            return
+        try:
+            if self._current_pattern is None or self._pattern_start_time is None:
+                return
 
-        elapsed = time.time() - self._pattern_start_time
+            elapsed = time.time() - self._pattern_start_time
 
-        # Iterate through all due steps in current pattern
-        while (self._pattern_step_index < len(self._current_pattern) and
-               self._current_pattern[self._pattern_step_index]["time"] <= elapsed):
-            step = self._current_pattern[self._pattern_step_index]
-            self._execute_joints(step["joints"])
-            self._pattern_step_index += 1
+            # Iterate through all due steps in current pattern
+            while (self._pattern_step_index < len(self._current_pattern) and
+                   self._current_pattern[self._pattern_step_index]["time"] <= elapsed):
+                step = self._current_pattern[self._pattern_step_index]
+                self._execute_joints(step.get("joints", {}))
+                self._pattern_step_index += 1
 
-        if self._pattern_step_index >= len(self._current_pattern):
-            self._current_pattern = None
-            self.get_logger().info("Pattern execution completed.")
-            self._json_logger.log("INFO", "Pattern Execution Completed", {})
+            if self._pattern_step_index >= len(self._current_pattern):
+                self._current_pattern = None
+                self.get_logger().info("Pattern execution completed.")
+                self._json_logger.log("INFO", "Pattern Execution Completed", {})
+        except Exception as e:
+            self.get_logger().error(f"Pattern timer callback failed: {e}")
 
     def _execute_joints(self, joints):
         """
@@ -155,20 +168,23 @@ class MovementControllerNode(Node):
         Args:
             joints (dict): Dictionary with joint names as keys and angles in degrees as values.
         """
-        left_msg = Float32MultiArray()
-        right_msg = Float32MultiArray()
+        try:
+            left_msg = Float32MultiArray()
+            right_msg = Float32MultiArray()
 
-        left_msg.data = [
-            float(joints.get("hip_left", 0.0)),
-            float(joints.get("knee_left", 0.0)),
-        ]
-        right_msg.data = [
-            float(joints.get("hip_right", 0.0)),
-            float(joints.get("knee_right", 0.0)),
-        ]
+            left_msg.data = [
+                float(joints.get("hip_left", 0.0)),
+                float(joints.get("knee_left", 0.0)),
+            ]
+            right_msg.data = [
+                float(joints.get("hip_right", 0.0)),
+                float(joints.get("knee_right", 0.0)),
+            ]
 
-        self._left_leg_publisher.publish(left_msg)
-        self._right_leg_publisher.publish(right_msg)
+            self._left_leg_publisher.publish(left_msg)
+            self._right_leg_publisher.publish(right_msg)
+        except Exception as e:
+            self.get_logger().error(f"Failed to execute joint command: {e}")
 
 def main(args=None):
     rclpy.init(args=args)

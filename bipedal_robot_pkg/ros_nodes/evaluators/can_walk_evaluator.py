@@ -63,6 +63,9 @@ class CanWalkEvaluator(Node):
         self._evaluate_can_walk()
 
     def _evaluate_can_walk(self):
-        can_walk = self._imu_grounded and self._battery_ok and self._no_obstacle
-        if self._blackboard.can_walk != can_walk:
-            self._blackboard.can_walk = can_walk
+        try:
+            can_walk = self._imu_grounded and self._battery_ok and self._no_obstacle
+            if self._blackboard.can_walk != can_walk:
+                self._blackboard.can_walk = can_walk
+        except Exception as e:
+            self.get_logger().error(f"Evaluating can_walk failed: {e}")

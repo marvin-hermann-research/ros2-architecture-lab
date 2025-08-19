@@ -7,13 +7,17 @@ import math
 
 class LaserSensorNode(Node):
     """
-    Simulated LIDAR node emitting scan data over a ±70° field of view.
+    Simulated LIDAR Node emitting LaserScan messages.
 
-    Publishes 10 scans per second with configurable angle resolution.
-    Can be extended to simulate obstacles at specific locations.
+    - Field of view: ±70° (total 140°)
+    - Angular resolution: 10° per point
+    - Range: 0.5 - 2.0 meters
+    - Frequency: ~10 Hz (0.00714s timer)
+    - Publishes on topic: 'laser_sensor_data'
 
-    TODO:
-        - Simulate specific obstacle configurations and patterns
+    Future improvements:
+    - Simulate specific obstacle patterns
+    - Add configurable noise characteristics
     """
     def __init__(self):
         super().__init__("laser_sensor")
@@ -44,20 +48,23 @@ class LaserSensorNode(Node):
             self._current_angle_index = 0
 
     def _send_scan_data(self):
-        scan_msg = LaserScan()
-        scan_msg.header = Header()
-        scan_msg.header.stamp = self.get_clock().now().to_msg()
-        scan_msg.header.frame_id = "laser_frame"
-        scan_msg.angle_min = self._angle_min
-        scan_msg.angle_max = self._angle_max
-        scan_msg.angle_increment = self._angle_increment
-        scan_msg.range_min = self._range_min
-        scan_msg.range_max = self._range_max
-        scan_msg.scan_time = 0.1
-        scan_msg.time_increment = 0.00714
-        scan_msg.ranges = self._scan_data
-        scan_msg.intensities = []
-        self._publisher.publish(scan_msg)
+        try:
+            scan_msg = LaserScan()
+            scan_msg.header = Header()
+            scan_msg.header.stamp = self.get_clock().now().to_msg()
+            scan_msg.header.frame_id = "laser_frame"
+            scan_msg.angle_min = self._angle_min
+            scan_msg.angle_max = self._angle_max
+            scan_msg.angle_increment = self._angle_increment
+            scan_msg.range_min = self._range_min
+            scan_msg.range_max = self._range_max
+            scan_msg.scan_time = 0.1
+            scan_msg.time_increment = 0.00714
+            scan_msg.ranges = self._scan_data
+            scan_msg.intensities = []
+            self._publisher.publish(scan_msg)
+        except Exception as e:
+            self.get_logger().error(f"Failed to publish LaserScan: {e}")
 
 def main(args=None):
     rclpy.init(args=args)

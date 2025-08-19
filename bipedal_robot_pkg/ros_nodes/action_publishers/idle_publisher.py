@@ -19,7 +19,14 @@ class IdlePublisher(Node):
         self.get_logger().info("Idle Publisher Node has been started.")
 
     def publish_message(self):
-        msg = String()
-        msg.data = "Idling"
-        self._publisher.publish(msg)
-        self.get_logger().info(f"Published: '{msg.data}'")
+        """
+        Publishes an 'Idling' message to the 'idle_status' topic.
+        Typically called by BT action nodes to indicate no movement.
+        """
+        try:
+            msg = String()
+            msg.data = "Idling"
+            self._publisher.publish(msg)
+            self.get_logger().info(f"Published: '{msg.data}'")
+        except Exception as e:
+            self.get_logger().error(f"Failed to publish idle message: {e}")

@@ -33,10 +33,13 @@ class WalkForwardBehaviour(py_trees.behaviour.Behaviour):
         if not self._active:
             self._active = True
         
-        # Continue publishing to maintain walk command
-        self._ros_publisher.publish_message()
+        try:
+            # Continue publishing to maintain walk command
+            self._ros_publisher.publish_message()
 
-        self._ros_publisher.get_logger().info("Walk Forward Behaviour is active, publishing walk command.")
-
+            self._ros_publisher.get_logger().info("Walk Forward Behaviour is active, publishing walk command.")
+        except Exception as e:
+                self._ros_publisher.get_logger().error(f"Error publishing walk command: {e}")
+                
         # Node does not self-terminate; control is managed by the BT parent nodes
         return py_trees.common.Status.RUNNING

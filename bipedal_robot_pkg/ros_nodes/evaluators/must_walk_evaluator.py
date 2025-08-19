@@ -35,5 +35,8 @@ class MustWalkEvaluator(Node):
         self._blackboard.must_walk = False
 
     def _must_walk_listener_callback(self, data: Bool):
-        # Write incoming Bool to blackboard as 'must_walk' flag.
-        self._blackboard.must_walk = data.data
+        try:
+            # Write incoming Bool to blackboard as 'must_walk' flag
+            self._blackboard.must_walk = data.data
+        except Exception as e:
+            self.get_logger().error(f"Failed to update 'must_walk' blackboard key: {e}")

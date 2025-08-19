@@ -22,35 +22,38 @@ class LoggingFactory:
         self._logger = logging.getLogger(node_name)
         self._logger.setLevel(logging.INFO)
 
-        # Prevent duplicate handlers if logger is reused
         if not self._logger.handlers:
-            handler = RotatingFileHandler(
-                log_file, maxBytes=5 * 10**6, backupCount=5, encoding="utf-8"
-            )
-
-            # jsonlogger will serialize `extra` fields automatically
-            formatter = jsonlogger.JsonFormatter() #type: ignore
-            handler.setFormatter(formatter)
-            self._logger.addHandler(handler)
+            try:
+                handler = RotatingFileHandler(
+                    log_file, maxBytes=5 * 10**6, backupCount=5, encoding="utf-8"
+                )
+                formatter = jsonlogger.JsonFormatter()  # type: ignore
+                handler.setFormatter(formatter)
+                self._logger.addHandler(handler)
+            except Exception as e:
+                print(f"Failed to initialize logger for {node_name}: {e}")
 
     def log(self, level: str, event: str, data: dict):
         """
-        Create a structured log entry.
+        Create a structured JSON log entry.
 
         Args:
-            level (str): One of ["DEBUG", "INFO", "WARNING", "ERROR"]
-            event (str): Short identifier for the log event
-            data (dict): Additional structured information
+            level (str): Logging level ["DEBUG", "INFO", "WARNING", "ERROR"]
+            event (str): Short event identifier
+            data (dict): Structured data payload
         """
-        log_method = getattr(self._logger, level.lower(), self._logger.info)
-
-        log_method(
-            event,
-            extra={
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-                "node": self._node_name,
-                "level": level.upper(),
-                "event": event,
-                "data": data
-            },
-        )
+        # Log using JSON formatter; catch exceptions to prevent runtime crash
+        try:
+            log_method = getattr(self._logger, level.lower(), self._logger.info)
+            log_method(
+                event,
+                extra={
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "node": self._node_name,
+                    "level": level.upper(),
+                    "event": event,
+                    "data": data
+                },
+            )
+        except Exception as e:
+            print(f"Logging failed for node {self._node_name}, event {event}: {e}")

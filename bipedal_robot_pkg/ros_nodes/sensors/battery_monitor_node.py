@@ -4,13 +4,12 @@ from sensor_msgs.msg import BatteryState
 
 class BatteryMonitorNode(Node):
     """
-    Simulated battery publisher that broadcasts decreasing battery levels.
+    Simulated Battery Monitor Node broadcasting battery state.
 
-    Emulates a battery discharging at 10 mV/s. Used for evaluating
-    behavior tree response thresholds (e.g. 'can_walk').
-
-    Topic:
-        - battery_monitor_data (sensor_msgs/BatteryState)
+    - Frequency: 1 Hz
+    - Simulates linear discharge at 10 mV/s
+    - Publishes on topic: 'battery_monitor_data' (sensor_msgs/BatteryState)
+    - Used for behavior tree evaluation (e.g., 'can_walk')
     """
     def __init__(self):
         super().__init__("battery_monitor")
@@ -22,13 +21,16 @@ class BatteryMonitorNode(Node):
         self.get_logger().info("Battery Monitor Node has been started.")
 
     def _publish_battery_state(self):
-        msg = BatteryState()
-        msg.voltage = self._battery_voltage
-        msg.percentage = max(0.0, self._battery_voltage / self._battery_max_voltage)
-        msg.power_supply_status = BatteryState.POWER_SUPPLY_STATUS_DISCHARGING
-        self._publisher.publish(msg)
+        try:
+            msg = BatteryState()
+            msg.voltage = self._battery_voltage
+            msg.percentage = max(0.0, self._battery_voltage / self._battery_max_voltage)
+            msg.power_supply_status = BatteryState.POWER_SUPPLY_STATUS_DISCHARGING
+            self._publisher.publish(msg)
 
-        self._battery_voltage -= 0.01  # simulate discharge rate
+            self._battery_voltage -= 0.01  # simulate discharge rate
+        except Exception as e:
+            self.get_logger().error(f"Failed to publish battery state: {e}")
 
 def main(args=None):
     rclpy.init(args=args)

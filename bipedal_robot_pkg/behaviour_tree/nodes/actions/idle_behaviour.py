@@ -34,10 +34,13 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
         if not self._active:
             self._active = True
         
-        # Continue publishing on every update to maintain idle command
-        self._ros_publisher.publish_message()
+        try:
+            # Continue publishing on every update to maintain idle command
+            self._ros_publisher.publish_message()
 
-        self._ros_publisher.get_logger().info("Idle Behaviour is active, publishing idle command.")
+            self._ros_publisher.get_logger().info("Idle Behaviour is active, publishing idle command.")
+        except Exception as e:
+            self._ros_publisher.get_logger().error(f"Error publishing idle command: {e}")
 
         # This node does not self-terminate; it relies on BT parent control flow.
         return py_trees.common.Status.RUNNING
