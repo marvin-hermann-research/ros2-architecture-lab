@@ -12,8 +12,6 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
 
     Status:
         - RUNNING on first activation to indicate ongoing action initiation.
-        - SUCCESS after initial activation, reflecting that idle is active.
-    
     Publishing Logic:
         - The first publish occurs once upon activation (when _active is False).
         - Subsequent publishes occur every update to keep the command active.

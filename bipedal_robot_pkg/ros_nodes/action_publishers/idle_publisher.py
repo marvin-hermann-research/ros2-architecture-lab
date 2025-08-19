@@ -6,8 +6,8 @@ class IdlePublisher(Node):
     """
     ROS2 node responsible for publishing idle state signals.
 
-    This publisher is typically used within behavior tree action nodes
-    to signal that the robot should remain stationary or enter an idle
+    This publisher is used within behavior tree action nodes
+    to signal that the robot should remain enter an idle
     state (e.g., animation or no movement phase).
 
     Topic:

@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 class LoggingFactory:
     """
-    ScientificLogger provides a unified JSON-based logging interface
+    LoggingFactory provides a unified JSON-based logging interface
     for all ROS2 nodes and components. Logs follow a fixed schema:
 
     {

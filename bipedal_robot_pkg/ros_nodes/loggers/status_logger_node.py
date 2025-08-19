@@ -6,6 +6,8 @@ from sensor_msgs.msg import Imu, LaserScan, BatteryState
 class StatusLogger(Node):
     """
     Passive Status Logger Node for robot state monitoring.
+    This node exists to log the status of various sensors and instructions
+    by being parsed by the application layer.
 
     - Subscribes to:
         * 'imu_sensor_data' (sensor_msgs/Imu)

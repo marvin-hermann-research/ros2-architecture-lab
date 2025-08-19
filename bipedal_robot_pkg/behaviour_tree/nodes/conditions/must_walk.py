@@ -6,7 +6,7 @@ class mustWalk(py_trees.behaviour.Behaviour):
 
     Uses the PyTrees blackboard system to read the 'must_walk' flag.
     This flag should be externally written via a console interface or
-    ROS node (to be implemented).
+    ROS node.
 
     Returns:
         - SUCCESS if must_walk is True

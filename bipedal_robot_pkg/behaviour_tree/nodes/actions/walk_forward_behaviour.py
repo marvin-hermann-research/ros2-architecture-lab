@@ -10,9 +10,7 @@ class WalkForwardBehaviour(py_trees.behaviour.Behaviour):
     to ensure uninterrupted walking instructions.
 
     Status:
-        - RUNNING on first activation indicating the start of walking.
-        - SUCCESS after initial activation, denoting the walking state.
-    
+        - RUNNING on first activation indicating the start of walking.    
     Publishing Logic:
         - Publishes once immediately after activation.
         - Continues publishing every update to maintain the walking command.

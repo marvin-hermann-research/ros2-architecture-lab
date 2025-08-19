@@ -26,10 +26,11 @@ class TreeFactory:
         Constructs a locomotion tree with priority-based decision logic.
 
         Node priority:
-            1. Idle
-            2. Can Walk?
-            3. Must Walk?
-            4. Walk Forward
+            1. Walk Forward Sequence (if conditions met)
+                - Can Walk?
+                - Must Walk?
+                - Walk Forward Action
+            2. Idle Action (if no walking conditions are met)
 
         Returns:
             py_trees.composites.Selector: The root of the behavior tree.
