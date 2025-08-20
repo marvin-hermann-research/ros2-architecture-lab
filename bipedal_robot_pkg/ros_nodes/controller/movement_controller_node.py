@@ -5,7 +5,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, String
 from ament_index_python.packages import get_package_share_directory
 import os 
-from bipedal_robot_pkg.ros_nodes.loggers.logging_factory import LoggingFactory
+from bipedal_robot_pkg.ros_nodes.logger.logging_factory import LoggingFactory
 
 class MovementControllerNode(Node):
     """
