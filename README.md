@@ -1,25 +1,68 @@
-# Bipedal Robot Behaviour Tree Framework for ROS2
+# Bipedal Robot Locomotion Framework: A Modular Behaviour Tree Architecture for ROS2
+
+## Table of Contents
+
+- [Project Description](#project-description)
+- [Motivation](#motivation)
+- [Project Context](#project-context)
+- [Architecture Overview](#architecture-overview)
+  - [behaviour_tree/](#behaviour_tree)
+  - [ros_nodes/](#ros_nodes)
+  - [Paket Diagram](#paket-diagram)
+- [System Launch and Initialization](#system-launch-and-initialization)
+- [Data Flow and Component Interaction](#data-flow-and-component-interaction)
+- [Motion Pattern Management](#motion-pattern-management)
+  - [Structure](#structure)
+- [Structured Scientific Logging](#structured-scientific-logging)
+  - [Core Design](#logging-core-design)
+  - [Usage Example](#usage-example)
+- [Use Cases](#use-cases)
+  - [Idle](#idle)
+  - [Walk Forward](#walk-forward)
+- [Installation & Usage](#installation--usage)
+  - [Setup](#setup)
+    - [1. System requirements](#1-system-requirements)
+    - [2. Clone repository](#2-clone-repository)
+    - [3. Install Python dependencies](#3-install-python-dependencies)
+    - [Build the workspace](#build-the-workspace)
+    - [Run the application](#run-the-application)
+- [Extensibility](#extensibility)
+- [Future Work](#future-work)
+- [License](#license)
+- [Author](#author)
 
 ## Project Description
 
-This project provides a **modular research framework** for robotic locomotion in ROS2.  
-It combines **Behavior Trees (BTs)** with a **distributed sensor–actuator architecture**, enabling structured decision-making and extensible control of humanoid robot systems.
+This repository presents a **research-oriented framework** for robotic locomotion in ROS2.  
+It integrates **Behaviour Trees (BTs)** with a **distributed sensor–actuator architecture**, enabling structured decision-making and extensible, modular control of humanoid robots.
 
 ## Motivation
 
 ROS2 has become the standard middleware for robotics and embodied AI research, offering robust communication between sensors, actuators, and higher-level logic.
-Behavior Trees extend this by introducing **structured, hierarchical decision-making**, which is more flexible and transparent than finite-state machines, especially in locomotion tasks.
+Behaviour Trees enhance this by introducing **structured, hierarchical decision-making**, offering greater flexibility and transparency than finite-state machines, particularly in locomotion tasks.
 
-The framework was designed to explore **scientific conventions in modular robotic architectures**, emphasizing reproducibility, extensibility, and clarity.  
-It serves as a foundation for simulated experiments while maintaining compatibility with real hardware through a plug-and-play design.
+This framework has been developed as a **research foundation to explore modular robotic architectures** in simulation.  
+It emphasizes **scientific conventions** such as reproducibility, extensibility, and clarity, while maintaining compatibility with real hardware through a **plug-and-play design**.  
+As such, it serves both as a reproducible baseline for scientific experimentation and as a portfolio contribution towards ongoing research in **embodied AI and behaviour-based control**.
 
 ## Project Context
 
-Context: This project was designed with the afterthought of creating a fully fledeged realistic ros2 robot locomotion framework which not only is inline with todays convention but also modular and expandable for future use of my private research projects
+The framework implements a modular and extensible architecture for robotic locomotion in ROS2.
+The design follows current research conventions and emphasizes scalability, making it suitable as a foundation for future experimental projects.
 
-Ziel: As this is my first project my goal was not to haggle with real sensors and actuators but to simulate and build a framwork around this limitation which supports real hardware down the line per plug and play
+**Scope**  
+- Provides a realistic locomotion framework without relying on physical sensors or actuators.
+- Uses simulated ROS2 nodes for sensing and actuation, while maintaining a plug-and-play design that supports future hardware integration.  
 
-references: While studying ros2 I mainly used the official documantation of [ROS, ROS2, Py_trees, Py_trees_ros as well as python-json-logger]. During the projcets creation I also documented everything I've learned in a structured and tutoring manner in my ROS2 Master post which you also can find on my git hub [ROS2 Masterpost] I highly reccommend checking it out as this document provides more inside behind the architecture and possibilities of ROS2
+**References**
+Development was guided by the official documentation of:
+
+- [ROS2 Documentation](https://docs.ros.org/)
+- [py_trees](https://py-trees.readthedocs.io/)
+- [py_trees_ros](https://py-trees-ros-tutorials.readthedocs.io/)
+- [python-json-logger](https://pypi.org/project/python-json-logger/)
+  
+Additional resources are available in the [ROS2 Masterpost](https://github.com/marvin-hermann-research/masterposts/blob/main/ros2_engineering_notes.md), providing detailed insights into ROS2 concepts and architectural decisions.
 
 ## Architecture Overview
 
@@ -64,72 +107,215 @@ bipedal_robot_pkg/
 │       └── walk_forward_publisher.py
 ```
 
-Besides the standard ROS2 components setup.py, package.xml and the requirements.txt, the project consists of two mein modules:
+The project consists of two primary modules beyond the standard ROS2 components (`setup.py`, `package.xml`, `requirements.txt`):
 
-### behavour_tree/
-This module implements all behaviour tree components, stores the locomotion patterns and handels the robots initialization. It contains the following modules:
-##### patterns/
-Module which contains all locomotion patterns as yaml files 
-##### nodes/
-Module which contains the behavour tree factory responsible for building the desired tree as well as all the trees action and condition nodes
-##### launch/
-Module which contains the robot systems launch file which initializates not only the behaviour tee but also all ros2 components
+### behaviour_tree/
+
+Implements the behaviour tree components, stores locomotion patterns, and handles robot initialization. Contains:
+
+- **patterns/**: YAML files defining locomotion sequences.
+- **nodes/**: The `TreeFactory` constructs BTs and includes action and condition nodes.
+- **launch/**: Launch file initializing the behaviour tree and all ROS2 nodes.
 
 ### ros_nodes/
-This module implements all ros2 components, handels the systems scientific logging and bridges to the behavour tree. it contains the following modules:
-##### actuators/
-Module which contains the robots intended actuator nodes e.g. pair of legs. These get their instructions through topics send by the controler module 
-##### controller/
-Module which contains the systems movement controler. This structure is respobsible for implementing the trees current locomotion action by sending the specific yaml movement information to the actuators
-##### evaluators/
-Module which bridges the gap from the ros2 components to the behavour tree conditions by imlementing evaluators. This structures listen to specific ros2 topics and are registered to distinct blackboard keys whos data they manipulate
-##### loggers/
-Module which implements the logging factory which provides the service of a scientific json logger intended to be used for indepth analysis of hypothetical experiments
-##### sensors/
-Module which contains all the projects sensor nodes. Each node publishes (simmulated) data on distinct topics.
-##### action_publishers/
-Moudle which bridges the gap from the behaviour tree to the ros2 components by implementing action publishers. These structures are publisher nodes parsed to the trees action nodes on instantiiation. The trees action nodes use them to send instructions to the controler module
 
-[todo paket / klassen diagramme] 
+Implements ROS2 components, manages structured scientific logging, and bridges to the behaviour tree. Contains:
 
-### Genaue erklärung der kritischen komponenten
+- **actuators/**: Nodes for robot actuators (e.g., legs), receiving instructions from the controller.
+- **controller/**: `MovementControllerNode` executes locomotion patterns based on BT actions.
+- **evaluators/**: Subscriber nodes that evaluate sensor data and update Blackboard keys.
+- **logger/**: Provides `LoggingFactory` for structured JSON logging of experiments.
+- **sensors/**: Sensor nodes publishing simulated data to ROS2 topics.
+- **action_publishers/**: Bridge BT actions to ROS2 topics, used by action nodes to command the controller.
 
-(wie genau funktionirt das launchen und initialisieren des systems und was passiert dabei (evtl ablauf diagramm))
-(wie genau wird der baum angelegt)
+### Architecture Diagrams
 
+![Paket Diagram](docs/images/paket_diagram.svg)
 
-## Ablauf projekt start und allgemeiner datenfluss
+![Ros Nodes and Topics](docs/images/rosgraph.svg)
 
-(wie kommuniziert genau tree mit ros2 teil und was kommuniziert mit wem und was macht der logger)
+## System Launch and Initialization
 
-1. Sensor-Nodes → liefern Daten
-2. Evaluatoren → setzen Flags auf die Blackboard
-3. BT entscheidet (walk / idle)
-4. Action Publisher + Controller → Bewegungen
-5. Logger → überwacht alles
+The application launches via a ROS 2 entrypoint (`ros2 run`), calling the **BipedalRobotApplication** constructor. The initialization sequence is as follows:
 
-Gifs der folgenden dinge:
-- projekt start (colcon build, source, ros2 launch)
-- rqt graph
-- topic list
-- node list
-- sensor topic streams
-- BT anzeigen lassen
-- grafik des loggers
+1. **ROS 2 Runtime Initialization**  
+   - The `rclpy` runtime is started and the main application node (`bipedal_robot_application`) is created.  
 
-## 2 anwendungsfälle 
+2. **Node Instantiation**  
+  -  Instantiate and register all subsystem nodes:
+    - **Action Publishers**: `IdlePublisher`, `WalkForwardPublisher`
+	- **Actuators**: `LeftLegNode`, `RightLegNode`
+	- **Controller**: `MovementControllerNode`
+	- **Evaluators**: `CanWalkEvaluator`, `MustWalkEvaluator`
+	- **Sensors**: `BatteryMonitorNode`, `ImuSensorNode`, `LaserSensorNode`
 
-nennen also idle und laufen. hier fluss diagramme
+3. **Behaviour Tree Construction**  
+   - A factory pattern (`TreeFactory`) builds the locomotion behaviour tree.  
+   - Each **BT Condition Node** is linked to exactly one **Evaluator Node**,  
+     allowing it to use the ROS 2 logging framework.  
+   - Each **BT Action Node** is linked to exactly one **Action Publisher Node**,  
+     enabling it to signal locomotion commands through ROS 2 topics.  
 
-- gif des anwendungsfalls command eingeben um laufen zu signalisieren, hier zeige haupt ros konsole, konsole des baums, baum, command eingabe console
+   - The locomotion tree follows a **priority-based structure**:  
+
+     **Root Node (Selector: "Locomotion Root")**  
+     ├── **Sequence: "Walk Forward Sequence"**  
+     │   ├── Condition: `Can Walk?`  
+     │   ├── Condition: `Must Walk?`  
+     │   └── Action: `Walk Forward`  
+     └── **Action: Idle**  
+
+   - The tree is implemented in `TreeFactory` and integrated with ROS 2 via `py_trees_ros.BehaviourTree`.  
+
+![Behaviour Tree Visualisation](docs/images/tree_visualisation.gif)
+
+4. **Executor Setup**  
+   - All nodes, including the behaviour tree, are registered under a **multi-threaded executor**.  
+   - This ensures parallel handling of sensor input, condition evaluation, decision logic, and actuation.  
+
+5. **Run Phase**  
+   - Periodic BT ticking (default 100 ms) while the executor handles callbacks.
+
+6. **Shutdown**  
+   - On interrupt or termination, all nodes are gracefully destroyed and the ROS 2 runtime is properly shut down to ensure reproducibility and resource safety.  
+
+### Project Startup
+
+![Project Startup](docs/images/project_startup.gif)
+
+![Project Initialisation](docs/images/startup_intialisation_output.png)
+
+## Data Flow and Component Interaction
+
+### ROS2, Behaviour Tree Communication Pipeline
+
+![Communication Pipeline](docs/images/tree_ros_pipeline.svg)
+
+The system follows a modular **ROS 2 ↔ Behaviour Tree integration** pattern.  
+Each component fulfills a distinct role in sensing, decision-making, and actuation.  
+
+1. **Sensor Nodes**  
+   - Publish raw data (e.g., IMU, battery status, laser range) on dedicated ROS 2 topics.  
+
+![Battery Topic Stream](docs/images/battery_topic_stream.gif)
+
+![Laser Topic Stream](docs/images/laser_topic_stream.gif)
+
+![Laser Topic Stream](docs/images/imu_topic_stream.gif)
+
+2. **Evaluators (ROS 2 Subscriber Nodes)**  
+   - Subscribe to one or multiple sensor topics.  
+   - Internally process the data according to predefined logic.  
+   - Each evaluator is uniquely bound to a **single Blackboard key** (writer role).  
+   - Depending on the evaluation, they set the Blackboard entry to *True/False* (or other structured values).  
+
+3. **Behaviour Tree Condition Nodes**  
+   - Each condition node is linked to a Blackboard key.  
+   - On each tick, the condition checks the Blackboard entry.  
+   - Returns **SUCCESS** or **FAILURE**, thereby influencing the execution path of the BT.  
+
+4. **Behaviour Tree Action Nodes**  
+   - When activated, an action node uses its associated **Action Publisher Node**.  
+   - The action node calls the publisher’s `.publish()` method, emitting the required control message on a topic.  
+
+![Behaviour Tree](docs/images/node_list_command.png)
+
+5. **Action Publishers → Controller**  
+   - Action Publishers publish locomotion commands on dedicated topics.  
+   - The **Movement Controller Node** subscribes to these topics.  
+   - On receiving a command, the controller loads the corresponding **locomotion pattern** (from YAML files).  
+   - It then distributes the motion primitives to the actuator nodes.  
+
+6. **Actuator Nodes**  
+   - Represent robot limbs (e.g., left/right legs).  
+   - Execute the received motion commands to produce locomotion.  
+
+### Active Nodes and Topics
+
+![Node List](docs/images/node_list_command.png)
+
+![Topic List](docs/images/topic_list_command.png)
+
+## Motion Pattern Management
+
+Locomotion sequences are abstracted into **YAML-based motion patterns**.  
+This design separates high-level behaviours from low-level actuation details, allowing researchers to extend or modify robot gaits without touching controller code.
+
+### Structure
+1. **Pattern Index (`all_patterns.yaml`)**  
+   - Maps symbolic names (e.g., `idle`, `walk_forward`) to file paths of specific motion patterns.
+   - Provides a single point of reference for available gaits.
+
+2. **Pattern Files (`*_pattern.yaml`)**  
+   - Contain time-stamped joint configurations.  
+   - Each entry specifies hip and knee angles for both legs relative to upright stance.  
+   - Designed for continuous looping.
+
+   ![Pattern Example](docs/images/pattern_example.png)
+
+3. **Runtime Loading**  
+   - The `MovementControllerNode` loads the requested pattern via the index.  
+   - Pattern steps are executed in real time by comparing elapsed time against step timestamps.  
+   - Completed patterns are reset, enabling repetition or seamless switching.
+
+## Structured Scientific Logging
+
+The framework provides a **dedicated logging subsystem**, ensuring that every relevant event in the robot’s lifecycle can be captured, stored, and later analyzed in a reproducible manner.
+
+### Logging Core Design
+- **Logging Factory**: Each ROS 2 node can instantiate a `LoggingFactory`, which wraps around Python’s `logging` and `python-json-logger`.  
+- **JSON Schema**: All logs follow a fixed structure:  
+
+  ```json
+  {
+    "timestamp": "...",
+    "node": "...",
+    "level": "...",
+    "event": "...",
+    "data": {...}
+  }
+  ```
+
+- **Storage**: Logs are written to rotating JSON files (default: `robot_log.json`), preventing uncontrolled growth while preserving history.
+- **Decoupled Operation**: Logging is orthogonal to decision-making, failures in logging do not affect control flow.
+
+### Usage Example
+
+```python
+self._json_logger.log("INFO", "Pattern Loaded", {"pattern": pattern_name})
+self._json_logger.log("ERROR", "Pattern Load Failed", {"pattern": pattern_name, "error": str(e)})
+```
+
+![Example Log](docs/images/json_log.png)
+
+## Use Cases
+
+### Idle
+
+- **Trigger**: Executed when either BT condition node `CanWalk` or `MustWalk` return `FAILURE`.
+- **Flow**:
+  1. BT action node `IdleBehaviour` publishes an `idle_status` topic.
+  2. `MovementControllerNode` receives this message.
+  3. The controller loads the `idle` pattern from YAML and streams actuator commands.
+- **Result**: The robot enters a subtle, stationary stance, simulating realistic idle posture.
+
+### Walk Forward
+
+- **Trigger**: Executed when both BT condition nodes `CanWalk` and `MustWalk` return `SUCCESS`.
+- **Special Note**: `CanWalk` depends on sensor logic; `MustWalk` is externally triggerable via CLI *(Command Line Interface)* input, simulating an explicit researcher command.
+- **Flow**:
+  1. BT action node `WalkForwardBehaviour` publishes a `walk_forward` topic.
+  2. `MovementControllerNode` subscribes and reacts by loading the `walk_forward` YAML pattern.
+  3. The controller streams the walking motion sequence step-by-step to actuators.
+- **Result**: The robot performs a cyclic forward walking gait.
+
+### Use Cases Visualisation
+
+![Use Cases Visualisation](docs/images/use_case.gif)
 
 ## Installation & Usage
 
-### Requirements
-
-- ROS2 Humble (or compatible)
-- Python ≥ 3.10
-- Dependencies from `requirements.txt`
+**Requirements**: ROS2 Humble, Python ≥ 3.10, dependencies from `requirements.txt`.
 
 ### Setup
 
@@ -167,13 +353,6 @@ source install/setup.bash
 ```bash
 ros2 run bipedal_robot_pkg robot_application
 ```
-
-## References
-
-- [ROS2 Documentation](https://docs.ros.org/)
-- [py_trees](https://py-trees.readthedocs.io/)
-- [py_trees_ros](https://py-trees-ros-tutorials.readthedocs.io/)
-- [python-json-logger](https://pypi.org/project/python-json-logger/)
   
 ## Extensibility
 
@@ -184,8 +363,20 @@ The framework is designed for modular expansion:
 - Extension of the logging system (e.g. Grafana dashboards, external monitoring).
 - Planned future work: **hardware integration** via a dedicated companion [repository].
 
+## Future Work
+
+A dedicated hardware project building upon this framework is currently planned.  
+The goal is to control a simple, stationary robot arm using **simulated neuromorphic sensors**.  
+These sensors will be implemented using conventional hardware (e.g. ESP32), but will emulate neuromorphic behaviour through event-driven signal processing.  
+
+The robot arm will support four distinct movement patterns, each of which can be executed either **continuously** or as a **one-shot** action.  
+
+This future work aims to validate the current software stack on real hardware and explore the integration of neuromorphic-inspired input into behaviour tree–based control.
+
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Author
+
 Marvin Hermann (@marvin-hermann-research)
