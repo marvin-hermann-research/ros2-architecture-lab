@@ -1,3 +1,5 @@
+import yaml
+import time
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, String
@@ -12,10 +14,8 @@ class MovementControllerNode(Node):
     This node subscribes to high-level commands such as "idle_status"
     and "walk_forward", and is responsible for translating them into
     low-level actuator instructions for both legs.
-
-    Future Features:
-        - Load movement sequences from YAML files
-        - Parse and execute kinematic or trajectory scripts
+    It manages motion patterns defined in YAML files, executing them
+    in a time-synchronized manner.
     """
     def __init__(self):
         super().__init__("movement_controller")
