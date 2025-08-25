@@ -131,13 +131,13 @@ Implements ROS2 components, manages structured scientific logging, and bridges t
 ### Architecture Diagrams
 
 <p align="center">
-  <img src="docs/images/paket_diagram.svg" width="600"/>
+  <img src="docs/images/package_diagram.svg" width="800"/>
 </p>
 
 *Figure 1: Package Diagram.*
 
 <p align="center">
-  <img src="docs/images/rosgraph.svg" width="600"/>
+  <img src="docs/images/rosgraph.svg" width="800"/>
 </p>
 
 *Figure 2: ROS2 nodes and topics during runtime.*
@@ -176,7 +176,7 @@ The application launches via a ROS 2 entrypoint (`ros2 run`), calling the **Bipe
    - The tree is implemented in `TreeFactory` and integrated with ROS 2 via `py_trees_ros.BehaviourTree`.  
 
 <p align="center">
-  <img src="docs/images/tree_visualisation.gif" width="600"/>
+  <img src="docs/images/tree_visualisation.gif" width="800"/>
 </p>
 
 *Figure 3: Behaviour Tree visualisation.*
@@ -312,7 +312,7 @@ self._json_logger.log("ERROR", "Pattern Load Failed", {"pattern": pattern_name, 
 ```
 
 <p align="center">
-  <img src="docs/images/json_log.png" width="600"/>
+  <img src="docs/images/json_log.png" width="800"/>
 </p>
 
 *Figure 9: Log example.*
@@ -341,7 +341,7 @@ self._json_logger.log("ERROR", "Pattern Load Failed", {"pattern": pattern_name, 
 ### Use Case Visualisation
 
 <p align="center">
-  <img src="docs/images/use_case.gif" width="600"/>
+  <img src="docs/images/use_case.gif" width="800"/>
 </p>
 
 *Figure 10: Use case visualisation. Command line interface induced switch of action state.*
