@@ -3,12 +3,11 @@ from py_trees.common import Status
 
 class IdleBehaviour(py_trees.behaviour.Behaviour):
     """
-    Behavior tree node representing the idle state of the robot.
-
-    This node signals that the robot should remain in a minimal-motion 
-    idle posture. It publishes an 'idle' command via a ROS publisher 
-    when active, ensuring the command is continuously sent to maintain 
-    the idle state.
+    A behavior node that enters an idle state.
+    
+    Intended as a fallback action when no locomotion is required.
+    This node will publish an 'idle' command via a ROS publisher 
+    (to be implemented) when active. 
 
     Status:
         - RUNNING on first activation to indicate ongoing action initiation.
@@ -24,11 +23,9 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
         self._ros_publisher.get_logger().info("Idle Behaviour initialized.")
 
     def initialise(self):
-        # Reset the active flag on node reinitialization
         self._active = False
 
     def update(self):
-        # On first update call after activation, publish once and mark active
         if not self._active:
             self._active = True
         
@@ -42,4 +39,3 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
 
         # This node does not self-terminate; it relies on BT parent control flow.
         return py_trees.common.Status.RUNNING
-
