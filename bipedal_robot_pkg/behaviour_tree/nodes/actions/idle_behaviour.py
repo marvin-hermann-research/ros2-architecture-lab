@@ -24,11 +24,9 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
         self._ros_publisher.get_logger().info("Idle Behaviour initialized.")
 
     def initialise(self):
-        # Reset the active flag on node reinitialization
         self._active = False
 
     def update(self):
-        # On first update call after activation, publish once and mark active
         if not self._active:
             self._active = True
         
@@ -42,5 +40,3 @@ class IdleBehaviour(py_trees.behaviour.Behaviour):
 
         # This node does not self-terminate; it relies on BT parent control flow.
         return py_trees.common.Status.RUNNING
-
- 
