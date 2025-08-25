@@ -131,7 +131,7 @@ Implements ROS2 components, manages structured scientific logging, and bridges t
 ### Architecture Diagrams
 
 <p align="center">
-  <img src="docs/images/paket_diagram.svg" width="600"/>
+  <img src="docs/images/package_diagram.svg" width="600"/>
 </p>
 
 *Figure 1: Package Diagram.*
