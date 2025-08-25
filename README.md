@@ -8,8 +8,7 @@
 - [Architecture Overview](#architecture-overview)
   - [behaviour_tree/](#behaviour_tree)
   - [ros_nodes/](#ros_nodes)
-  - [Paket Diagram](#paket-diagram)
-- [System Launch and Initialization](#system-launch-and-initialization)
+- [System Launch and Initialisation](#system-launch-and-initialisation)
 - [Data Flow and Component Interaction](#data-flow-and-component-interaction)
 - [Motion Pattern Management](#motion-pattern-management)
   - [Structure](#structure)
@@ -19,6 +18,7 @@
 - [Use Cases](#use-cases)
   - [Idle](#idle)
   - [Walk Forward](#walk-forward)
+  - [Use Case Visualisation](#use-case-visualisation)
 - [Installation & Usage](#installation--usage)
   - [Setup](#setup)
     - [1. System requirements](#1-system-requirements)
@@ -111,11 +111,11 @@ The project consists of two primary modules beyond the standard ROS2 components 
 
 ### behaviour_tree/
 
-Implements the behaviour tree components, stores locomotion patterns, and handles robot initialization. Contains:
+Implements the behaviour tree components, stores locomotion patterns, and handles robot initialisation. Contains:
 
 - **patterns/**: YAML files defining locomotion sequences.
 - **nodes/**: The `TreeFactory` constructs BTs and includes action and condition nodes.
-- **launch/**: Launch file initializing the behaviour tree and all ROS2 nodes.
+- **launch/**: Launch file initialising the behaviour tree and all ROS2 nodes.
 
 ### ros_nodes/
 
@@ -130,15 +130,23 @@ Implements ROS2 components, manages structured scientific logging, and bridges t
 
 ### Architecture Diagrams
 
-![Paket Diagram](docs/images/paket_diagram.svg)
+<p align="center">
+  <img src="docs/images/paket_diagram.svg" width="600"/>
+</p>
 
-![Ros Nodes and Topics](docs/images/rosgraph.svg)
+*Figure 1: Package Diagram.*
 
-## System Launch and Initialization
+<p align="center">
+  <img src="docs/images/rosgraph.svg" width="600"/>
+</p>
 
-The application launches via a ROS 2 entrypoint (`ros2 run`), calling the **BipedalRobotApplication** constructor. The initialization sequence is as follows:
+*Figure 2: ROS2 nodes and topics during runtime.*
 
-1. **ROS 2 Runtime Initialization**  
+## System Launch and Initialisation
+
+The application launches via a ROS 2 entrypoint (`ros2 run`), calling the **BipedalRobotApplication** constructor. The initialisation sequence is as follows:
+
+1. **ROS 2 Runtime Initialisation**  
    - The `rclpy` runtime is started and the main application node (`bipedal_robot_application`) is created.  
 
 2. **Node Instantiation**  
@@ -167,7 +175,12 @@ The application launches via a ROS 2 entrypoint (`ros2 run`), calling the **Bipe
 
    - The tree is implemented in `TreeFactory` and integrated with ROS 2 via `py_trees_ros.BehaviourTree`.  
 
-![Behaviour Tree Visualisation](docs/images/tree_visualisation.gif)
+<p align="center">
+  <img src="docs/images/tree_visualisation.gif" width="600"/>
+</p>
+
+*Figure 3: Behaviour Tree visualisation.*
+
 
 4. **Executor Setup**  
    - All nodes, including the behaviour tree, are registered under a **multi-threaded executor**.  
@@ -181,15 +194,22 @@ The application launches via a ROS 2 entrypoint (`ros2 run`), calling the **Bipe
 
 ### Project Startup
 
-![Project Startup](docs/images/project_startup.gif)
+<p align="center">
+   <img src="docs/images/project_startup.gif" width="600"/>
+   <img src="docs/images/startup_intialisation_output.png" width="600"/>
+</p>
 
-![Project Initialisation](docs/images/startup_intialisation_output.png)
+*Figure 4: a) Project startup sequence; b) Initialisation sequence.*
 
 ## Data Flow and Component Interaction
 
 ### ROS2, Behaviour Tree Communication Pipeline
 
-![Communication Pipeline](docs/images/tree_ros_pipeline.svg)
+<p align="center">
+   <img src="docs/images/tree_ros_pipeline.svg" width="600"/>
+</p>
+
+*Figure 5: Communication pipeline architecture.*
 
 The system follows a modular **ROS 2 ↔ Behaviour Tree integration** pattern.  
 Each component fulfills a distinct role in sensing, decision-making, and actuation.  
@@ -197,11 +217,11 @@ Each component fulfills a distinct role in sensing, decision-making, and actuati
 1. **Sensor Nodes**  
    - Publish raw data (e.g., IMU, battery status, laser range) on dedicated ROS 2 topics.  
 
-![Battery Topic Stream](docs/images/battery_topic_stream.gif)
+<p align="center">
+   <img src="docs/images/laser_topic_stream.gif" width="600"/>
+</p>
 
-![Laser Topic Stream](docs/images/laser_topic_stream.gif)
-
-![Laser Topic Stream](docs/images/imu_topic_stream.gif)
+*Figure 6: Laser sensor topic stream.*
 
 2. **Evaluators (ROS 2 Subscriber Nodes)**  
    - Subscribe to one or multiple sensor topics.  
@@ -218,8 +238,6 @@ Each component fulfills a distinct role in sensing, decision-making, and actuati
    - When activated, an action node uses its associated **Action Publisher Node**.  
    - The action node calls the publisher’s `.publish()` method, emitting the required control message on a topic.  
 
-![Behaviour Tree](docs/images/node_list_command.png)
-
 5. **Action Publishers → Controller**  
    - Action Publishers publish locomotion commands on dedicated topics.  
    - The **Movement Controller Node** subscribes to these topics.  
@@ -232,9 +250,12 @@ Each component fulfills a distinct role in sensing, decision-making, and actuati
 
 ### Active Nodes and Topics
 
-![Node List](docs/images/node_list_command.png)
+<p align="center">
+  <img src="docs/images/node_list_command.png" width="400"/>
+  <img src="docs/images/topic_list_command.png" width="400"/>
+</p>
 
-![Topic List](docs/images/topic_list_command.png)
+*Figure 7: a) Node list; b) Topic listing during runtime.*
 
 ## Motion Pattern Management
 
@@ -251,7 +272,11 @@ This design separates high-level behaviours from low-level actuation details, al
    - Each entry specifies hip and knee angles for both legs relative to upright stance.  
    - Designed for continuous looping.
 
-   ![Pattern Example](docs/images/pattern_example.png)
+<p align="center">
+  <img src="docs/images/pattern_example.png" width="600"/>
+</p>
+
+*Figure 8: Pattern example. Showcase of walk cycle step.*
 
 3. **Runtime Loading**  
    - The `MovementControllerNode` loads the requested pattern via the index.  
@@ -286,7 +311,11 @@ self._json_logger.log("INFO", "Pattern Loaded", {"pattern": pattern_name})
 self._json_logger.log("ERROR", "Pattern Load Failed", {"pattern": pattern_name, "error": str(e)})
 ```
 
-![Example Log](docs/images/json_log.png)
+<p align="center">
+  <img src="docs/images/json_log.png" width="600"/>
+</p>
+
+*Figure 9: Log example.*
 
 ## Use Cases
 
@@ -309,9 +338,14 @@ self._json_logger.log("ERROR", "Pattern Load Failed", {"pattern": pattern_name, 
   3. The controller streams the walking motion sequence step-by-step to actuators.
 - **Result**: The robot performs a cyclic forward walking gait.
 
-### Use Cases Visualisation
+### Use Case Visualisation
 
-![Use Cases Visualisation](docs/images/use_case.gif)
+<p align="center">
+  <img src="docs/images/use_case.gif" width="600"/>
+</p>
+
+*Figure 10: Use case visualisation. Command line interface induced switch of action state.*
+
 
 ## Installation & Usage
 
