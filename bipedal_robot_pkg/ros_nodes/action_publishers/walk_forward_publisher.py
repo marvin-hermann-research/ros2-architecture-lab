@@ -18,7 +18,14 @@ class WalkForwardPublisher(Node):
         self.get_logger().info("Walk Forward Publisher Node has been started.")
 
     def publish_message(self):
-        msg = String()
-        msg.data = "Walking forward"
-        self.publisher_.publish(msg)
-        self.get_logger().info(f"Published: '{msg.data}'")
+        """
+        Publishes a forward movement command to the 'walk_forward' topic.
+        Intended to be called by BT action nodes to trigger locomotion.
+        """
+        try:
+            msg = String()
+            msg.data = "Walking forward"
+            self.publisher_.publish(msg)
+            self.get_logger().info(f"Published: '{msg.data}'")
+        except Exception as e:
+            self.get_logger().error(f"Failed to publish walk forward message: {e}")

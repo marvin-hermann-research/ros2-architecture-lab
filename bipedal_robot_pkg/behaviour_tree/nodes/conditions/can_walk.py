@@ -23,9 +23,17 @@ class canWalk(py_trees.behaviour.Behaviour):
 
     
     def update(self):
-        if self._blackboard.can_walk:
-            self._ros2_logger.info("Can Walk condition succeeded.")
-            return py_trees.common.Status.SUCCESS
-        else:
-            self._ros2_logger.info("Can Walk condition failed.")
+        """Reads 'can_walk' from the blackboard and returns SUCCESS or FAILURE."""
+        try:
+            if self._blackboard.can_walk:
+                self._ros2_logger.info("Can Walk condition succeeded.")
+                return py_trees.common.Status.SUCCESS
+            else:
+                self._ros2_logger.info("Can Walk condition failed.")
+                return py_trees.common.Status.FAILURE
+        except AttributeError as e:
+            self._ros2_logger.error(f"Can Walk blackboard key missing: {e}")
+            return py_trees.common.Status.FAILURE
+        except Exception as e:
+            self._ros2_logger.error(f"Error in Can Walk update: {e}")
             return py_trees.common.Status.FAILURE

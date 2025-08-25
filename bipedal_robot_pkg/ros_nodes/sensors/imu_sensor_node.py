@@ -8,10 +8,12 @@ import math
 
 class ImuSensorNode(Node):
     """
-    Simulated IMU sensor publishing orientation and acceleration data.
+    Simulated IMU Node providing orientation and linear acceleration.
 
-    Provides a realistic but slightly noisy orientation using
-    a Gaussian distribution and a stable Z-axis acceleration (~9.81 m/s²).
+    - Frequency: 20 Hz
+    - Orientation: Gaussian noise around (0,0,0) Euler angles
+    - Linear acceleration: stable 0,0,9.81 m/s²
+    - Publishes on topic: 'imu_sensor_data'
     """
     def __init__(self):
         super().__init__("imu_sensor")
@@ -21,20 +23,23 @@ class ImuSensorNode(Node):
         self.get_logger().info("IMU Sensor Node has been started.")
 
     def _publish_imu_data(self):
-        _imu_msg = Imu()
-        _imu_msg.header = Header()
-        _imu_msg.header.stamp = self.get_clock().now().to_msg()
-        _imu_msg.header.frame_id = "imu_frame"
+        try:
+            _imu_msg = Imu()
+            _imu_msg.header = Header()
+            _imu_msg.header.stamp = self.get_clock().now().to_msg()
+            _imu_msg.header.frame_id = "imu_frame"
 
-        _roll = random.gauss(0.0, 0.01)
-        _pitch = random.gauss(0.0, 0.01)
-        _yaw = random.gauss(0.0, 0.01)
-        _imu_msg.orientation = self._euler_to_quaternion(_roll, _pitch, _yaw)
-        _imu_msg.orientation_covariance[0] = -1.0
+            _roll = random.gauss(0.0, 0.01)
+            _pitch = random.gauss(0.0, 0.01)
+            _yaw = random.gauss(0.0, 0.01)
+            _imu_msg.orientation = self._euler_to_quaternion(_roll, _pitch, _yaw)
+            _imu_msg.orientation_covariance[0] = -1.0
 
-        _imu_msg.angular_velocity = Vector3(x=0.0, y=0.0, z=0.0)
-        _imu_msg.linear_acceleration = Vector3(x=0.0, y=0.0, z=9.81)
-        self._publisher.publish(_imu_msg)
+            _imu_msg.angular_velocity = Vector3(x=0.0, y=0.0, z=0.0)
+            _imu_msg.linear_acceleration = Vector3(x=0.0, y=0.0, z=9.81)
+            self._publisher.publish(_imu_msg)
+        except Exception as e:
+            self.get_logger().error(f"Failed to publish IMU data: {e}")
 
     def _euler_to_quaternion(self, roll, pitch, yaw):
         # Standard Euler → Quaternion conversion

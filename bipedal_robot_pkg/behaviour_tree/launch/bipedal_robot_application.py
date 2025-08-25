@@ -74,7 +74,7 @@ class BipedalRobotApplication(Node):
         # === 4. Initialize the behavior tree ===
         # The 'BehaviourTree' integrates the tree into the ROS 2 timing system
         self._tree = BehaviourTree(
-            root,
+            root, # type: ignore 
             False  # If True, prints ASCII representation of tree after each tick
         )
         self._tree.setup(timeout=15)
@@ -108,7 +108,9 @@ class BipedalRobotApplication(Node):
             # Spins all other nodes via the executor (not automatically covered by tick_tock)
             self._executor.spin()
         except KeyboardInterrupt:
-            pass
+            self.get_logger().info("Shutdown requested via KeyboardInterrupt.")
+        except Exception as e:
+            self.get_logger().error(f"Unexpected error in run loop: {e}")
         finally:
             self.shutdown()
 

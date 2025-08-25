@@ -4,7 +4,7 @@ package_name = 'bipedal_robot_pkg'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='0.1.0',
     packages=find_packages(exclude=['test']),
     # add package data for behaviour tree patterns
     package_data={
@@ -26,16 +26,16 @@ setup(
         )
     ],
     install_requires=[
-    'setuptools',
+    'setuptools>=65',
     'py_trees_ros',
     'py_trees',
     'pyyaml',
     ],
     zip_safe=True,
-    maintainer='marvin',
-    maintainer_email='marvin@todo.todo',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Marvin',
+    maintainer_email='marvinmail06@gmail.com',
+    description='ROS2 package implementing a bipedal robot behaviour tree framework for research and simulation.',
+    license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

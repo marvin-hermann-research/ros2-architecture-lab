@@ -6,7 +6,7 @@ class mustWalk(py_trees.behaviour.Behaviour):
 
     Uses the PyTrees blackboard system to read the 'must_walk' flag.
     This flag should be externally written via a console interface or
-    ROS node (to be implemented).
+    ROS node.
 
     Returns:
         - SUCCESS if must_walk is True
@@ -23,9 +23,16 @@ class mustWalk(py_trees.behaviour.Behaviour):
         self._ros2_logger = ros2_logger.get_logger()
 
     def update(self):
-        if self._blackboard.must_walk:
-            self._ros2_logger.info("Must Walk condition succeeded.")
-            return py_trees.common.Status.SUCCESS
-        else:
-            self._ros2_logger.info("Must Walk condition failed.")
+        try:
+            if self._blackboard.must_walk:
+                self._ros2_logger.info("Must Walk condition succeeded.")
+                return py_trees.common.Status.SUCCESS
+            else:
+                self._ros2_logger.info("Must Walk condition failed.")
+                return py_trees.common.Status.FAILURE
+        except AttributeError as e:
+            self._ros2_logger.error(f"Must Walk blackboard key missing: {e}")
+            return py_trees.common.Status.FAILURE
+        except Exception as e:
+            self._ros2_logger.error(f"Error in Must Walk update: {e}")
             return py_trees.common.Status.FAILURE

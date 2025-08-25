@@ -2,10 +2,10 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>bipedal_robot_pkg</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="marvin@todo.todo">marvin</maintainer>
-  <license>TODO: License declaration</license>
+  <version>0.1.0</version>
+  <description>ROS2 package implementing a bipedal robot behaviour tree framework for research and simulation.</description>
+  <maintainer email="marvinmail06@gmail.com">Marvin</maintainer>
+  <license>MIT</license>
 
   <depend>rclpy</depend>
   <depend>py_trees</depend>
